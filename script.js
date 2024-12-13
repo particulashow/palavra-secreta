@@ -38,16 +38,22 @@ function processComment(comment) {
 }
 
 // Configura o WebSocket para comentários em tempo real
-const ws = new WebSocket("wss://io.socialstream.ninja/socket");
+const streamID = "748c0ff7"; // Substitui pelo teu streamID
+const ws = new WebSocket(`wss://io.socialstream.ninja/socket?streamID=${streamID}`);
 
 ws.onopen = () => {
   console.log("WebSocket conectado!");
 };
 
 ws.onmessage = (event) => {
-  const commentData = JSON.parse(event.data);
-  const commentText = commentData.comment || "";
-  processComment(commentText);
+  console.log("Mensagem recebida:", event.data);
+  try {
+    const commentData = JSON.parse(event.data);
+    const commentText = commentData.comment || "";
+    processComment(commentText);
+  } catch (error) {
+    console.error("Erro ao processar a mensagem:", error);
+  }
 };
 
 ws.onerror = (error) => {
