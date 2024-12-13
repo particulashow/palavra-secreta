@@ -37,22 +37,26 @@ function processComment(comment) {
   }
 }
 
-// Simulação de comentários em tempo real
-function simulateComments() {
-  const sampleComments = [
-    "Olá pessoal",
-    "C",
-    "Eu gosto de comunicar",
-    "O mundo é bonito",
-    "Vamos todos juntos",
-    "Ação é importante"
-  ];
+// Configura o WebSocket para comentários em tempo real
+const ws = new WebSocket("wss://io.socialstream.ninja/socket");
 
-  sampleComments.forEach((comment, index) => {
-    setTimeout(() => processComment(comment), index * 2000);
-  });
-}
+ws.onopen = () => {
+  console.log("WebSocket conectado!");
+};
 
-// Inicia o jogo
+ws.onmessage = (event) => {
+  const commentData = JSON.parse(event.data);
+  const commentText = commentData.comment || "";
+  processComment(commentText);
+};
+
+ws.onerror = (error) => {
+  console.error("Erro no WebSocket:", error);
+};
+
+ws.onclose = () => {
+  console.log("WebSocket desconectado.");
+};
+
+// Inicializa o jogo
 updateDisplay();
-simulateComments();
