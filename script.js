@@ -1,23 +1,24 @@
 const params = new URLSearchParams(window.location.search);
 const domain = params.get('domain') || 'http://localhost:4000';
 const secretWord = (params.get('word') || 'misterio').toLowerCase();
+const triesFromURL = parseInt(params.get('tries')) || 6;
 
 const wordDisplay = document.getElementById('word-display');
 const triesLeftEl = document.getElementById('tries-left');
 const forcaFigure = document.getElementById('forca-figure');
 const effectsContainer = document.getElementById('effects-container');
 
-let maxTries = 6;
+let maxTries = triesFromURL;
 let currentTries = maxTries;
 let guessedLetters = [];
 let victoryAchieved = false;
 let defeatAchieved = false;
 
-// Desenha os espaços das letras
+// Desenha os espaços das letras como "_"
 const letters = secretWord.split('').map(letter => {
   const span = document.createElement('span');
   span.classList.add('letter');
-  span.textContent = letter.toUpperCase();
+  span.textContent = '_';  // Mostra apenas _ no início
   wordDisplay.appendChild(span);
   return { letter: letter, element: span };
 });
@@ -40,6 +41,7 @@ function fetchGuesses() {
             letters.forEach(({ letter, element }) => {
               if (letter === guess) {
                 element.classList.add('revealed');
+                element.textContent = letter.toUpperCase();  // Revela a letra
               }
             });
           }
@@ -64,7 +66,7 @@ function updateForcaFigure() {
     '😵\n/|\\\n/ \\'
   ];
 
-  forcaFigure.textContent = stages[maxTries - currentTries];
+  forcaFigure.textContent = stages[maxTries - currentTries] || stages[stages.length - 1];
 }
 
 function checkVictoryOrDefeat() {
@@ -95,6 +97,6 @@ function showDefeat() {
   document.body.appendChild(message);
 }
 
-// Atualiza a cada segundo
+// Atualizar a cada segundo
 setInterval(fetchGuesses, 1000);
 fetchGuesses();
