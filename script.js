@@ -1,68 +1,34 @@
-// Palavra secreta
-const secretWord = "COMUNICACAO";
-let revealedWord = "_".repeat(secretWord.length).split("");
+const params = new URLSearchParams(window.location.search);
+const domain = params.get('domain') || 'http://localhost:4000';
+const secretWord = (params.get('word') || 'misterio').toLowerCase();
 
-// Atualiza a palavra no ecrã
-function updateDisplay() {
-  const wordDisplay = document.getElementById("word-display");
-  wordDisplay.textContent = revealedWord.join(" ");
+const wordDisplay = document.getElementById('word-display');
+
+// Cria os espaços das letras
+const letters = secretWord.split('').map(letter => {
+  const span = document.createElement('span');
+  span.classList.add('letter');
+  span.textContent = letter.toUpperCase();
+  wordDisplay.appendChild(span);
+  return { letter: letter, element: span };
+});
+
+// Atualizar a palavra com base nos comentários
+function fetchGuesses() {
+  fetch(`${domain}/wordcloud`)
+    .then(response => response.json())
+    .then(data => {
+      const guesses = (data.wordcloud || "").toLowerCase().split(',');
+
+      letters.forEach(({ letter, element }) => {
+        if (guesses.includes(letter)) {
+          element.classList.add('revealed');
+        }
+      });
+    })
+    .catch(error => console.error('Erro ao buscar dados:', error));
 }
 
-// Valida um comentário
-function processComment(comment) {
-  const upperComment = comment.toUpperCase();
-  let found = false;
-
-  // Verifica cada letra da palavra secreta
-  secretWord.split("").forEach((letter, index) => {
-    if (upperComment.includes(letter) && revealedWord[index] === "_") {
-      revealedWord[index] = letter;
-      found = true;
-    }
-  });
-
-  // Atualiza o estado do jogo
-  if (found) {
-    document.getElementById("status").textContent = "Letra encontrada!";
-  } else {
-    document.getElementById("status").textContent = "Tenta outra vez!";
-  }
-
-  // Atualiza o ecrã
-  updateDisplay();
-
-  // Verifica se a palavra está completa
-  if (!revealedWord.includes("_")) {
-    document.getElementById("status").textContent = "Parabéns! Palavra completa!";
-  }
-}
-
-// Configura o WebSocket para comentários em tempo real
-const streamID = "748c0ff7"; // Substitui pelo teu streamID
-const ws = new WebSocket(`wss://io.socialstream.ninja/socket?streamID=${streamID}`);
-
-ws.onopen = () => {
-  console.log("WebSocket conectado!");
-};
-
-ws.onmessage = (event) => {
-  console.log("Mensagem recebida:", event.data);
-  try {
-    const commentData = JSON.parse(event.data);
-    const commentText = commentData.comment || "";
-    processComment(commentText);
-  } catch (error) {
-    console.error("Erro ao processar a mensagem:", error);
-  }
-};
-
-ws.onerror = (error) => {
-  console.error("Erro no WebSocket:", error);
-};
-
-ws.onclose = () => {
-  console.log("WebSocket desconectado.");
-};
-
-// Inicializa o jogo
-updateDisplay();
+// Atualizar a cada segundo
+setInterval(fetchGuesses, 1000);
+fetchGuesses();
