@@ -1,31 +1,50 @@
 body {
-  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
+  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: transparent; /* Torna o fundo transparente */
-  color: white;
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
 }
 
-#game-container {
-  padding: 20px 40px;
+#secret-container {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 30px;
   border-radius: 12px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.6); /* Fundo semi-transparente para contraste */
+  width: 80%;
+  max-width: 800px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+#secret-title {
+  color: white;
+  font-size: 2em;
+  margin-bottom: 30px;
 }
 
 #word-display {
   font-size: 2.5em;
+  color: white;
   letter-spacing: 10px;
-  margin-bottom: 20px;
-  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-#status {
-  font-size: 1.2em;
-  margin-top: 10px;
-  color: #ffcc00;
+.letter {
+  margin: 0 5px;
+  transition: 0.3s;
+  opacity: 0.4;
+  border-bottom: 2px solid white;
+  width: 30px;
+  text-align: center;
+}
+
+.letter.revealed {
+  opacity: 1;
+  color: #4caf50;
 }
