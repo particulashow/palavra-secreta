@@ -3,11 +3,17 @@ const domain = params.get('domain') || 'http://localhost:4000';
 const secretWord = (params.get('word') || 'misterio').toLowerCase();
 
 const wordDisplay = document.getElementById('word-display');
+const triesLeftEl = document.getElementById('tries-left');
+const forcaFigure = document.getElementById('forca-figure');
 const effectsContainer = document.getElementById('effects-container');
 
+let maxTries = 6;
+let currentTries = maxTries;
+let guessedLetters = [];
 let victoryAchieved = false;
+let defeatAchieved = false;
 
-// Cria os espaços das letras
+// Desenha os espaços das letras
 const letters = secretWord.split('').map(letter => {
   const span = document.createElement('span');
   span.classList.add('letter');
@@ -22,45 +28,70 @@ function fetchGuesses() {
     .then(data => {
       const guesses = (data.wordcloud || "").toLowerCase().split(',');
 
-      letters.forEach(({ letter, element }) => {
-        if (guesses.includes(letter)) {
-          element.classList.add('revealed');
+      guesses.forEach(guess => {
+        guess = guess.trim();
+        if (guess.length === 1 && !guessedLetters.includes(guess)) {
+          guessedLetters.push(guess);
+
+          if (!secretWord.includes(guess)) {
+            currentTries--;
+            updateForcaFigure();
+          } else {
+            letters.forEach(({ letter, element }) => {
+              if (letter === guess) {
+                element.classList.add('revealed');
+              }
+            });
+          }
         }
       });
 
-      checkVictory();
+      checkVictoryOrDefeat();
     })
     .catch(error => console.error('Erro ao buscar dados:', error));
 }
 
-// Verifica se todas as letras foram reveladas
-function checkVictory() {
-  if (victoryAchieved) return;
+function updateForcaFigure() {
+  triesLeftEl.textContent = `Tentativas restantes: ${currentTries}`;
+
+  const stages = [
+    '',
+    '😵\n',
+    '😵\n |\n',
+    '😵\n/|\n',
+    '😵\n/|\\\n',
+    '😵\n/|\\\n /\n',
+    '😵\n/|\\\n/ \\'
+  ];
+
+  forcaFigure.textContent = stages[maxTries - currentTries];
+}
+
+function checkVictoryOrDefeat() {
+  if (victoryAchieved || defeatAchieved) return;
 
   const allRevealed = letters.every(({ element }) => element.classList.contains('revealed'));
+
   if (allRevealed) {
     victoryAchieved = true;
     showVictory();
+  } else if (currentTries <= 0) {
+    defeatAchieved = true;
+    showDefeat();
   }
 }
 
-// Mostra a vitória
 function showVictory() {
-  for (let i = 0; i < 30; i++) {
-    const spark = document.createElement('div');
-    spark.className = 'spark';
-    spark.style.top = Math.random() * 100 + '%';
-    spark.style.left = Math.random() * 100 + '%';
-    effectsContainer.appendChild(spark);
-
-    setTimeout(() => {
-      spark.remove();
-    }, 1000);
-  }
-
   const message = document.createElement('div');
   message.id = 'victory-message';
-  message.textContent = 'Palavra Completa! 🎉';
+  message.textContent = 'Vitória! 🎉';
+  document.body.appendChild(message);
+}
+
+function showDefeat() {
+  const message = document.createElement('div');
+  message.id = 'defeat-message';
+  message.textContent = 'Game Over! ☠️';
   document.body.appendChild(message);
 }
 
