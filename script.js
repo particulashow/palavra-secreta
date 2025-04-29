@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-const domain = params.get('domain') || 'http://localhost:4000';
+const domain = params.get('domain') || 'http://localhost:3900';
 const secretWord = (params.get('word') || 'misterio').toLowerCase();
 const triesFromURL = parseInt(params.get('tries')) || 6;
 
