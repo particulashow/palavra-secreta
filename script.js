@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-const domain = 'http://localhost:3900'; // Altera se necessário
+const domain = 'http://localhost:3900'; // Altera aqui se usares Vercel ou outro
 const wordParam = (params.get('word') || 'MAGIA').toUpperCase();
 const container = document.getElementById('secret-word');
 
@@ -26,7 +26,7 @@ function renderWord() {
     if (letter === ' ') {
       span.innerHTML = '&nbsp;';
       span.style.border = 'none';
-      span.style.opacity = 0;
+      span.style.visibility = 'hidden';
     } else if (revealedLetters.has(letter)) {
       span.textContent = letter;
       span.classList.add('visible');
@@ -36,6 +36,7 @@ function renderWord() {
     } else {
       span.textContent = letter;
       span.style.opacity = 0;
+      span.style.visibility = 'hidden';
     }
 
     container.appendChild(span);
