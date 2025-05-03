@@ -39,7 +39,7 @@ body {
 
 .visible {
   color: white;
-  animation: fadeInZoom 0.4s ease-out;
+  animation: fadeInZoom 0.4s ease-out forwards;
 }
 
 @keyframes fadeInZoom {
