@@ -1,7 +1,11 @@
 const params = new URLSearchParams(window.location.search);
-const domain = 'http://localhost:3900'; // muda se usares Vercel
+const domain = 'http://localhost:3900';
 const wordParam = (params.get('word') || 'MAGIA').toUpperCase();
+const titleParam = params.get('title') || 'Palavra Secreta 🧩';
 const container = document.getElementById('secret-word');
+
+// Define o título
+document.getElementById('title').textContent = titleParam;
 
 const uniqueLetters = [...new Set(wordParam.replace(/[^A-Z]/gi, ''))];
 const revealedLetters = new Set();
@@ -19,7 +23,7 @@ function renderWord() {
       span.textContent = letter;
       span.classList.add('visible');
     } else {
-      span.textContent = '_'; // Só traço visual — mas com sublinhado abaixo
+      span.textContent = '_';
       span.style.color = 'transparent';
     }
 
