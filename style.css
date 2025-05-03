@@ -34,18 +34,21 @@ body {
   padding: 0 5px;
   min-width: 30px;
   text-align: center;
-  color: white;
   border-bottom: 2px solid white;
+  color: white;
   opacity: 0;
+  visibility: hidden;
   transition: opacity 0.3s ease-in-out;
 }
 
 .partial {
   opacity: 0.5;
+  visibility: visible;
 }
 
 .visible {
   opacity: 1;
+  visibility: visible;
   animation: fadeInZoom 0.4s ease-out;
 }
 
