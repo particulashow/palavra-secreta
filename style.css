@@ -23,7 +23,6 @@ body {
 #secret-word {
   font-size: 4rem;
   letter-spacing: 1rem;
-  text-transform: uppercase;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -35,21 +34,12 @@ body {
   min-width: 30px;
   text-align: center;
   border-bottom: 2px solid white;
-  color: white;
-  transition: all 0.3s ease-in-out;
-}
-
-.partial {
-  opacity: 0.5;
+  color: transparent;
 }
 
 .visible {
-  opacity: 1;
+  color: white;
   animation: fadeInZoom 0.4s ease-out;
-}
-
-.hidden {
-  color: transparent;
 }
 
 @keyframes fadeInZoom {
