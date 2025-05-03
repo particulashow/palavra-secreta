@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-const domain = 'http://localhost:3900';
+const domain = 'http://localhost:3900'; // Altera se necessário
 const wordParam = (params.get('word') || 'MAGIA').toUpperCase();
 const container = document.getElementById('secret-word');
 
@@ -67,7 +67,6 @@ function fetchChat() {
     });
 }
 
-// Início
 fetch(`${domain}/clear-chat`).then(() => {
   renderWord();
   setInterval(fetchChat, 1000);
