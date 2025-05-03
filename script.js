@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-const domain = 'http://localhost:3900'; // Altera aqui se usares Vercel ou outro
+const domain = 'http://localhost:3900'; // altera se necessário
 const wordParam = (params.get('word') || 'MAGIA').toUpperCase();
 const container = document.getElementById('secret-word');
 
@@ -26,7 +26,6 @@ function renderWord() {
     if (letter === ' ') {
       span.innerHTML = '&nbsp;';
       span.style.border = 'none';
-      span.style.visibility = 'hidden';
     } else if (revealedLetters.has(letter)) {
       span.textContent = letter;
       span.classList.add('visible');
@@ -35,8 +34,7 @@ function renderWord() {
       span.classList.add('partial');
     } else {
       span.textContent = letter;
-      span.style.opacity = 0;
-      span.style.visibility = 'hidden';
+      span.classList.add('hidden');
     }
 
     container.appendChild(span);
@@ -68,6 +66,7 @@ function fetchChat() {
     });
 }
 
+// Início
 fetch(`${domain}/clear-chat`).then(() => {
   renderWord();
   setInterval(fetchChat, 1000);
