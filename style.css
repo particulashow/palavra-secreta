@@ -36,20 +36,20 @@ body {
   text-align: center;
   border-bottom: 2px solid white;
   color: white;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .partial {
   opacity: 0.5;
-  visibility: visible;
 }
 
 .visible {
   opacity: 1;
-  visibility: visible;
   animation: fadeInZoom 0.4s ease-out;
+}
+
+.hidden {
+  color: transparent;
 }
 
 @keyframes fadeInZoom {
