@@ -1,21 +1,10 @@
 const params = new URLSearchParams(window.location.search);
-const domain = 'http://localhost:3900'; // altera se necessário
+const domain = 'http://localhost:3900'; // muda se usares Vercel
 const wordParam = (params.get('word') || 'MAGIA').toUpperCase();
 const container = document.getElementById('secret-word');
 
 const uniqueLetters = [...new Set(wordParam.replace(/[^A-Z]/gi, ''))];
 const revealedLetters = new Set();
-const partiallyVisible = escolherLetrasIniciais(wordParam, 2);
-
-function escolherLetrasIniciais(palavra, quantas = 2) {
-  const letrasUnicas = [...new Set(palavra.replace(/[^A-Z]/gi, ''))];
-  const escolhidas = [];
-  while (escolhidas.length < quantas && letrasUnicas.length > 0) {
-    const index = Math.floor(Math.random() * letrasUnicas.length);
-    escolhidas.push(letrasUnicas.splice(index, 1)[0]);
-  }
-  return new Set(escolhidas);
-}
 
 function renderWord() {
   container.innerHTML = '';
@@ -29,12 +18,9 @@ function renderWord() {
     } else if (revealedLetters.has(letter)) {
       span.textContent = letter;
       span.classList.add('visible');
-    } else if (partiallyVisible.has(letter)) {
-      span.textContent = letter;
-      span.classList.add('partial');
     } else {
-      span.textContent = letter;
-      span.classList.add('hidden');
+      span.textContent = '_'; // Só traço visual — mas com sublinhado abaixo
+      span.style.color = 'transparent';
     }
 
     container.appendChild(span);
@@ -66,7 +52,6 @@ function fetchChat() {
     });
 }
 
-// Início
 fetch(`${domain}/clear-chat`).then(() => {
   renderWord();
   setInterval(fetchChat, 1000);
